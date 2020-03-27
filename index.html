@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>磨墨</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="磨墨">
+<meta property="og:url" content="http://koolob.com/index.html">
+<meta property="og:site_name" content="磨墨">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="KOOLOB">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="磨墨" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">磨墨</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://koolob.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-在MAC系统下用DOCKER搭建SWOOLE开发环境" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/05/12/%E5%9C%A8MAC%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%94%A8DOCKER%E6%90%AD%E5%BB%BASWOOLE%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/" class="article-date">
+  <time datetime="2016-05-11T16:00:00.000Z" itemprop="datePublished">2016-05-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/05/12/%E5%9C%A8MAC%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%94%A8DOCKER%E6%90%AD%E5%BB%BASWOOLE%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/">在MAC系统下用DOCKER搭建SWOOLE开发环境</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>作为一款重新定义PHP的开源框架，Swoole让PHP可以应用于更多的场景。</p>
+<p>对于一位PHP程序员来说，通过Swoole可以了解以往不曾接触过的编程方法。</p>
+<p>众所周知，搭建开发环境其实是很麻烦的一件事，经常会遇到各种各样的问题。所以我用Docker搭建了一套Swoole环境，按照这篇教程，就可以非常简单得开始Swoole之旅。</p>
+<p>首先是安装Docker，官网有详细的安装步骤：<a href="https://docs.docker.com/mac/step_one/" target="_blank" rel="noopener">https://docs.docker.com/mac/step_one/</a></p>
+<p>Mac用户参考上述网址即可。对于其他系统的用户来说，官网都有相应的方法。这里不再细说。</p>
+<p>以下的步骤也都是基于Mac系统来进行。</p>
+<p>安装完成后，在Launchpad里会看到Docker Quickstart Terminal这个名字的应用，点击后，会打开系统默认的终端，然后等一会儿，就可以看到鲸鱼的画像出现了。</p>
+<p>要注意终端里的一条提示信息：</p>
+<pre><code>docker is configured to use the default machine with IP 192.168.99.100</code></pre><p>记住这个IP地址，我们访问容器时会用到。</p>
+<p>为了验证Docker是否运行起来，在打开的终端里输入下面的命令：</p>
+<pre><code>docker images</code></pre><p>如果Docker没有正确运行，会看到下面的错误提示：</p>
+<pre><code>Cannot connect to the Docker daemon. Is the docker daemon running on this host?</code></pre><p>确保Docker正确运行后，输入下面的命令，获取swoole镜像：</p>
+<pre><code>docker pull koolob/swoole-docker</code></pre><p>这个镜像是基于php:5.6-cli的镜像构建，包括swoole的最新版本1.8.4，默认使用了下面的编译参数进行编译：</p>
+<pre><code>--enable-async-redis 
+--enable-async-httpclient 
+--enable-openssl 
+--enable-jemalloc</code></pre><p>swoole的编译参数说明：<a href="http://wiki.swoole.com/wiki/page/437.html" target="_blank" rel="noopener">http://wiki.swoole.com/wiki/page/437.html</a></p>
+<p>这个镜像的Dockerfile是开源的，有需要搭建自定义环境的朋友可以参考我的Dockerfile文件进行修改：Github</p>
+<p>下载镜像后，就可以运行一个容器，进入Swoole环境了。</p>
+<p>输入命令：</p>
+<pre><code>docker run -t -i koolob/swoole-docker /bin/bash</code></pre><p>之后会进入到容器内。</p>
+<p>再次输入：</p>
+<pre><code>php -r &apos;echo swoole_version().&quot;\n&quot;;&apos;</code></pre><p>可以看到输出了1.8.4，也就是当前swoole的版本号。</p>
+<p>这样我们就有了一个通过Docker构建的Swoole环境。</p>
+<p>接下来，我们可以把代码和环境构建成一个镜像来运行。依然有个示例可以参考：</p>
+<pre><code>git clone https://github.com/koolob/swoole-docker-example.git</code></pre><p>下载下来后，切换到目录中，直接执行</p>
+<pre><code>./build.sh</code></pre><p>然后浏览器访问地址：<a href="http://192.168.99.100:8080/" target="_blank" rel="noopener">http://192.168.99.100:8080/</a> 就可以看到结果了，同时在终端中也能看到程序输出的内容。在终端里使用Ctrl+C就可以退出容器。</p>
+<p>192.168.99.100这个IP就是上文提到的终端提示的IP</p>
+<p>我们运行的是一个非常简单的HTTP服务，代码位于src文件夹下：</p>
+<pre><code>$serv = new swoole_http_server(&quot;0.0.0.0&quot;, 8080);
+
+$serv-&gt;on(&apos;Request&apos;, function($request, $response) {
+    var_dump($request-&gt;get);
+    var_dump($request-&gt;post);
+    var_dump($request-&gt;cookie);
+    var_dump($request-&gt;files);
+    var_dump($request-&gt;header);
+    var_dump($request-&gt;server);
+
+    $response-&gt;cookie(&quot;User&quot;, &quot;Swoole&quot;);
+    $response-&gt;header(&quot;X-Server&quot;, &quot;Swoole&quot;);
+    $response-&gt;end(&quot;&lt;h1&gt;Hello Swoole!&lt;/h1&gt;&quot;);
+});
+
+$serv-&gt;start();</code></pre><p>build.sh脚本做的事就是构建镜像，并启动一个容器。</p>
+<p>新构建的镜像也很简单，基于koolob/swoole-docker，开放8080端口，将src目录中的内容复制到镜像内，并在容器运行时，执行php代码。</p>
+<p>之后要做的事就是修改src中的代码，执行build.sh脚本，然后测试。</p>
+<p>至此，我们的Swoole开发环境搭建完毕。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://koolob.com/2016/05/12/%E5%9C%A8MAC%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%94%A8DOCKER%E6%90%AD%E5%BB%BASWOOLE%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/" data-id="ck8act25u000330f5f6og1v7i" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-如果我是支付宝，我会发多少个敬业福" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/02/02/%E5%A6%82%E6%9E%9C%E6%88%91%E6%98%AF%E6%94%AF%E4%BB%98%E5%AE%9D%EF%BC%8C%E6%88%91%E4%BC%9A%E5%8F%91%E5%A4%9A%E5%B0%91%E4%B8%AA%E6%95%AC%E4%B8%9A%E7%A6%8F/" class="article-date">
+  <time datetime="2016-02-01T16:00:00.000Z" itemprop="datePublished">2016-02-02</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/02/02/%E5%A6%82%E6%9E%9C%E6%88%91%E6%98%AF%E6%94%AF%E4%BB%98%E5%AE%9D%EF%BC%8C%E6%88%91%E4%BC%9A%E5%8F%91%E5%A4%9A%E5%B0%91%E4%B8%AA%E6%95%AC%E4%B8%9A%E7%A6%8F/">如果我是支付宝，我会发多少个敬业福</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>这几天支付宝的集五福活动很热闹，加十个好友就可以获得三个福，凑齐全部五个福的用户可以在2月8日平分2亿元。</p>
+<p>玩到现在大家都发现了，敬业福出现的最少。据说淘宝上这个福被炒到了99元。</p>
+<p>所以到现在为止，凑齐五福的人一共才数千人，如果继续按照这个概率进行，能分两亿元的用户必定不会很多，所以许多人会觉得，春晚时支付宝的“咻一咻”活动将放出大量的敬业福，以降低平均收益。</p>
+<p>那么最终会放出多少敬业福呢？</p>
+<p>好多人猜测平均收益也就是几块钱几毛钱，所以肯定会放出数千万到上亿的敬业福。</p>
+<p>如果我是支付宝的话，我不会这么做。</p>
+<p>首先我们看支付宝通过这个活动达到了什么样的效果。</p>
+<p>在支付宝刚加上社交功能时，大部分人其实是不用好友功能的。而通过集五福的活动，大家的支付宝好友数都增加了。</p>
+<p>支付宝设置的加好友数量是10，对于一般人来说，亲人、好友、同事几个圈子加起来，这个数量的好友还是很容易达到的。如果需要加更多的好友，可能有些人因为觉得达不到而一开始就不参与，更少的话，得到福字后就没有加好友的动力，而数量很少的好友根本凑不成一个良性社交圈子。</p>
+<p>对于支付宝来说，用户数不是问题，它需要的是用户之间建立起联系。</p>
+<p>那么通过集五福活动，到春晚之前，会主动加好友的应该都已经加了，像我这样不主动加好友的，通过接受申请，也会被动增加一些好友，再剩下的用户就是根本不想加好友的。</p>
+<p>加好友活动进行到最后时，初期能建立的用户联系基本已经建立起来。但是光建立联系不行，还需要用户间真的互动。</p>
+<p>微信之前靠一个红包把用户的互动引爆，支付宝显然不能再靠这个，所以才借鉴了集换式卡牌的玩法弄出来这么个五福活动。</p>
+<p>集这一环节，靠用户加好友来生产卡牌，达到了让用户建立联系的目的，换这一步骤，则是用以激活玩家之间的互动。</p>
+<p>支付宝这次的活动，总算有点社交的味道了。</p>
+<p>所以其实在批量放出敬业福之前，已经达成了建立用户联系并且激活互动的目的。</p>
+<p>那么如果我是支付宝，我为什么不会放出大量的敬业福呢？</p>
+<p>如果春晚当天，放出了大量的敬业福，也就是说之前大量的只剩一张敬业福的用户通过点点点就很容易凑齐了五福，那用户之后的互动就会减少，因为不需要交换了。</p>
+<p>另外大量的敬业福意味着平均收益降低，用户之前加好友换福字甚至高价去买稀缺的敬业福，最终得到的收益只有一点点甚至是负收益，下次支付宝再搞类似的活动，一定参与者寥寥。</p>
+<p>所以我一定要控制平均收益不会太低。最低也要100元。也就是最多总共发出两百万个敬业福。</p>
+<p>在运气层面的玩法里，为了提高玩家参与度，少数人获得高额奖励会更有效。当人人都认为自己可能是幸运的那一个时，就会愿意参与，相反，如果大家都能获得小额奖励，许多人反而没有参与动力了。</p>
+<p>重要的是，当我这次给集齐的玩家100元以上的奖励时，顺势搞下一波活动，比如元宵节的红包，之前没有主动加好友的人很有可能会参与进来，大家换卡的互动将更加频繁。而且后一波活动中用户会更积极，毕竟有前例证明这并不是几块几毛的蝇头小利。</p>
+<p>这样也就达到了让用户通过支付宝进行社交活动的目的。</p>
+<p>当然，我不会过于降低平均收益的前提是，我想为下一波的活动打基础。至于支付宝会怎么做，就看他们运营层面的考虑了。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://koolob.com/2016/02/02/%E5%A6%82%E6%9E%9C%E6%88%91%E6%98%AF%E6%94%AF%E4%BB%98%E5%AE%9D%EF%BC%8C%E6%88%91%E4%BC%9A%E5%8F%91%E5%A4%9A%E5%B0%91%E4%B8%AA%E6%95%AC%E4%B8%9A%E7%A6%8F/" data-id="ck8act25w000530f514qcf6ka" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-NGINX配置WEBSOCKET反向代理的超时问题" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/12/28/NGINX%E9%85%8D%E7%BD%AEWEBSOCKET%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E7%9A%84%E8%B6%85%E6%97%B6%E9%97%AE%E9%A2%98/" class="article-date">
+  <time datetime="2015-12-27T16:00:00.000Z" itemprop="datePublished">2015-12-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/12/28/NGINX%E9%85%8D%E7%BD%AEWEBSOCKET%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E7%9A%84%E8%B6%85%E6%97%B6%E9%97%AE%E9%A2%98/">NGINX配置WEBSOCKET反向代理的超时问题</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近做了一个聊天系统，选用了WebSocket协议。</p>
+<p>服务启动后，客户端直接连接。同时跟客户端约定了每分钟发一个心跳包过来。这样测试了一段时间，没有问题。</p>
+<p>正式上线时当然不能这样搞，所以打算加一层反向代理。</p>
+<p>Nginx目前是支持对WebSocket的反向代理的，不需要使用第三方的东西。配置的方式很简单，到处都可以搜到教程，这里不细说。</p>
+<p>配置好之后，我这边测试时遇到了一个问题。客户端第二次发心跳包时，就直接断开了。</p>
+<p>最终确认问题在于Nginx有个超时的设置，就是proxy_read_timeout，默认是60秒。</p>
+<p>所以我们约定的一分钟心跳正好踩到这个时间上了。</p>
+<p>在location中增加proxy_read_timeout，解决问题。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://koolob.com/2015/12/28/NGINX%E9%85%8D%E7%BD%AEWEBSOCKET%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E7%9A%84%E8%B6%85%E6%97%B6%E9%97%AE%E9%A2%98/" data-id="ck8act25r000130f583tf549r" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-一次与房屋中介的交锋" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/09/03/%E4%B8%80%E6%AC%A1%E4%B8%8E%E6%88%BF%E5%B1%8B%E4%B8%AD%E4%BB%8B%E7%9A%84%E4%BA%A4%E9%94%8B/" class="article-date">
+  <time datetime="2015-09-02T16:00:00.000Z" itemprop="datePublished">2015-09-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/09/03/%E4%B8%80%E6%AC%A1%E4%B8%8E%E6%88%BF%E5%B1%8B%E4%B8%AD%E4%BB%8B%E7%9A%84%E4%BA%A4%E9%94%8B/">一次与房屋中介的交锋</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>2013年，我在一个叫做中天置地的房屋中介处租了一间次卧。说是次卧，其实是把厅隔成了两间，两室一厅变成了四室。由于房子非常干净，人也少，我就租了下来。</p>
+<p>看房时，那位经纪人对我说这间房是他们公司的重点项目，要考察租客的，一间最多住俩人。后来我搬进去时，之前未出租的大主卧已经住进了四个人。最终一共住了7个人，也还好。不过我对于这个经纪人彻底不再信任。</p>
+<p>还差两个月到期时，事情终于来了。那位经纪人打电话向我确认续租意向，我告诉他不续租了。</p>
+<p>他说：你必须无条件地配合看房。</p>
+<p>我：合同里有这条约定么？</p>
+<p>他：你要是不配合看房，那押金就别想要了，到时候就直接搬走吧。</p>
+<p>我也火了：反正咱们就按合同来，合同里说了的话，我肯定配合。</p>
+<p>然后他挂了。</p>
+<p>其实我也不确定合同里有没有，打完电话后确认了一下，没有这一条。</p>
+<p>后来他又打来一次，说把钥匙给他，这样他带看房方便，我没答应，只让他要看房时提前跟我说，平时看的话，得晚上8点以后，周末时间好说。</p>
+<p>之后他有在周末带看几次，我都在家，所以相安无事，期间他跟我提留个钥匙给他，我依然拒绝。</p>
+<p>有一次周五他跟我约看房，我说要8点多，他说客户等不到那么晚，让我把钥匙给他。我没答应，告诉他之前跟他提过，非周末要8点以后，他放了狠话:你的这个房子我不看了！你不是磨人吗！那我到时候也磨磨你好了。</p>
+<p>我不确定他打算怎么做，不过我不可能把钥匙给他，也不可能任何时间都无条件配合他看房。大不了我押金不要了，到时候死磕呗。</p>
+<p>不过接下来一段时间，他果然没有再来看房。</p>
+<p>租约到期前两个礼拜，他跟我说要把我房里的一个多余的单人床拉走。约定了周日上午10点钟，结果他没来。我电话问他，他说拉床的师傅没来，我跟他说我之后会出门，如果要过来，提前半个小时打电话。</p>
+<p>下午我去签新房子的合同，签完后正要离开时，他打电话过来说你怎么不在屋，拉床的师傅都到了。我跟他说之前讲过要来拉床提前半小时跟我说，我这边半小时后会到。他说我这边时间没法定，你又不给我钥匙，我这次就最后等你半个小时，押金你也甭想要了。</p>
+<p>半小时后我回到那个房子处，师傅把床拉走,保险起见我还拍了视频，并让他写了一个拉走一张单人床的说明，避免退房时他以此作为理由扣押金。</p>
+<p>一周后的周末，我从这里搬了出去。然后回来退房。</p>
+<p>他检查了屋里的东西之后，说：你这边还有几天到期吧，到时直接来门店退押金吧。钥匙给我。</p>
+<p>我：那我也到时再把钥匙拿过去吧。</p>
+<p>他：行。那到时候来吧。</p>
+<p>出了房门，我要关门。</p>
+<p>他说：门就开着吧，又没有东西。</p>
+<p>我说：那不行。既然还没退房，这个屋子就还是我的。</p>
+<p>然后我把门关上了。</p>
+<p>他说：行。你就是成心不想让我带看房是吧。这钥匙我也不要了，到时你也不用来了，押金甭想要了。</p>
+<p>我说：行。那到时等住建委调解吧。</p>
+<p>我终于放大招了。之前上网查怎么对付房屋中介，发现最好的方法就是到住建委的网站去举报，中介都归他们管。我是打算如果闹到这一步那就直接举报他们不开发票的，不退押金什么的都是小事，发票可是一举报一个准。</p>
+<p>他一言不发，摔大门而出。</p>
+<p>我收拾收拾也打算离开时，他又开门进来了。</p>
+<p>行，给你退房。</p>
+<p>他妥协了。</p>
+<p>然后我们进屋继续谈。</p>
+<p>合同、押金条都带着么？</p>
+<p>带了。</p>
+<p>身份证带了么？</p>
+<p>带了。</p>
+<p>水电燃气费之前你们怎么交的？</p>
+<p>平摊，都是里面那间屋子的女生交，然后跟大家收。</p>
+<p>那我得跟那个女生确认你有没有欠着。你有她电话么？</p>
+<p>有。</p>
+<p>幸好之前刚搬进来时，那个女生跟屋里每个人都交换了电话。</p>
+<p>他这轮的出招我都接住了。我给那个女生打电话，让她跟经纪人说一下。</p>
+<p>确认完水电燃气后，他又仔细检查了一下屋子和外面的公用设施，然后说去店里退吧。</p>
+<p>我跟他回到店里。他算了一下未交清的水电燃气费，问了一下屋子里的人数，然后报了个数给我，70多块钱。我说OK。</p>
+<p>然后去他们的财务那里，财务还拿着单子问：X哥，剩下的都退么？他说：都退。</p>
+<p>我彻底服了，这也太明目张胆了吧。敢情你们很少正规退押金是吧。</p>
+<p>把合同、押金条给他们，拿回了两千多块钱的押金，出门之后，一颗提着的心终于放了下来。</p>
+<p>我还真怕他们把我打一顿。毕竟中介打人的事可不少啊。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://koolob.com/2015/09/03/%E4%B8%80%E6%AC%A1%E4%B8%8E%E6%88%BF%E5%B1%8B%E4%B8%AD%E4%BB%8B%E7%9A%84%E4%BA%A4%E9%94%8B/" data-id="ck8act25t000230f5gxryhrb3" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-程序员要有工程师思维" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/04/23/%E7%A8%8B%E5%BA%8F%E5%91%98%E8%A6%81%E6%9C%89%E5%B7%A5%E7%A8%8B%E5%B8%88%E6%80%9D%E7%BB%B4/" class="article-date">
+  <time datetime="2015-04-22T16:00:00.000Z" itemprop="datePublished">2015-04-23</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/04/23/%E7%A8%8B%E5%BA%8F%E5%91%98%E8%A6%81%E6%9C%89%E5%B7%A5%E7%A8%8B%E5%B8%88%E6%80%9D%E7%BB%B4/">程序员要有工程师思维</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>尽管程序员有时被叫做软件开发工程师，但好多程序员其实名不符实。我这里说的程序员指的就是从事编程工作的人。</p>
+<p>大学时一位老师给我们讲对日外包的情况，说日本人会把文档写得非常详细，连if分支都要写清楚，外包公司的程序员就照着文档来写代码，</p>
+<p>这种程序员不能叫做软件开发工程师，叫代码工可能更合适。</p>
+<p>而那位写出详细文档的家伙，才应该被叫做工程师。</p>
+<p>这里的区分在于，工程师能解决问题。</p>
+<p>工程师思维就是解决问题的思维。</p>
+<p>在我看来，这种思维要比你记得住一百个函数的具体用法还能用记事本直接编程要重要的多。</p>
+<p>对于一个初级程序员来说，当你被安排任务时，最好先想想这个任务到底是为了解决什么问题。</p>
+<p>比如让你为用户数据按某条件加个排序，如果你直接开动，确实能完成任务，但你只是加了一个排序而已。</p>
+<p>如果你先了解这个用户数据排序到底是为了做什么，那你完成任务后，解决的就是一个用户数据相关的问题。</p>
+<p>当你解决了许多问题，积累了许多经验后，能解决更大更抽象的问题时，你就升级了。</p>
+<p>这就叫经验的积累。</p>
+<p>写一年的排序，并不叫做有一年经验。而解决一年的问题，才是积累了一年经验。</p>
+<p>所以有些号称多年经验的程序员,你可能会发现他其实很水，因为他这么多年做的都是同一件事，顶多算一个熟练代码工而已。</p>
+<p>有人说，程序员做到多少多少岁要么转管理，要么转行，否则赶不上那些年轻人。</p>
+<p>对于年纪大的代码工来说，确实是这样。他们的性价比肯定不如年轻人。</p>
+<p>而对于年纪大的软件工程师来说，无需跟年轻人比，因为两者做的根本不是同一件事。可能看上去都是在写代码，但是代码要做的事，则天差地别。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://koolob.com/2015/04/23/%E7%A8%8B%E5%BA%8F%E5%91%98%E8%A6%81%E6%9C%89%E5%B7%A5%E7%A8%8B%E5%B8%88%E6%80%9D%E7%BB%B4/" data-id="ck8act25w000630f5cdqq4pb0" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-FACEBOOK的PAGE-TAB应用判断玩家是否对粉丝页点赞的新方法" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/03/30/FACEBOOK%E7%9A%84PAGE-TAB%E5%BA%94%E7%94%A8%E5%88%A4%E6%96%AD%E7%8E%A9%E5%AE%B6%E6%98%AF%E5%90%A6%E5%AF%B9%E7%B2%89%E4%B8%9D%E9%A1%B5%E7%82%B9%E8%B5%9E%E7%9A%84%E6%96%B0%E6%96%B9%E6%B3%95/" class="article-date">
+  <time datetime="2015-03-29T16:00:00.000Z" itemprop="datePublished">2015-03-30</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/03/30/FACEBOOK%E7%9A%84PAGE-TAB%E5%BA%94%E7%94%A8%E5%88%A4%E6%96%AD%E7%8E%A9%E5%AE%B6%E6%98%AF%E5%90%A6%E5%AF%B9%E7%B2%89%E4%B8%9D%E9%A1%B5%E7%82%B9%E8%B5%9E%E7%9A%84%E6%96%B0%E6%96%B9%E6%B3%95/">FACEBOOK的PAGE TAB应用判断玩家是否对粉丝页点赞的新方法</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Facebook的Page Tab应用在被访问时会收到一个signed_request参数，这个参数的字段说明可以参考<a href="https://developers.facebook.com/docs/reference/login/signed-request" target="_blank" rel="noopener">https://developers.facebook.com/docs/reference/login/signed-request</a></p>
+<p>其中page下有个liked字段，以前可以据此判断玩家是否对当前粉丝页点了赞，如今这个字段已经移除了。</p>
+<p>Facebook总是搞这种事，尽管它有自己的想法，但是对于开发者来说，实在是灾难。</p>
+<p>Google的服务用着用着就关了，Facebook的接口用着用着就变了。</p>
+<p>那现在怎么判断玩家是否点赞了呢？</p>
+<p>Facebook在这里给了一个方法：<a href="https://developers.facebook.com/docs/graph-api/common-scenarios" target="_blank" rel="noopener">https://developers.facebook.com/docs/graph-api/common-scenarios</a></p>
+<pre><code>Does someone like a Facebook Page?
+
+Although you can’t get a list of all the fans of a Facebook Page, you can find out whether a specific person has liked a Page.
+
+Use These APIs
+/{user-id}/likes/{page-id} – this API Read modifier will let you check via API.</code></pre><p>这是Facebook的Graph API，我不知道这个能否长久用下去，但起码现在是可用的。</p>
+<p>所以你需要发起</p>
+<pre><code>https://graph.facebook.com/{user-id}/likes/{page-id}?access_token={access_token}</code></pre><p>的请求。</p>
+<p>这里面user-id、page-id、access_token都能从signed_request里拿到，分别是user_id、page.id和oauth_token字段。</p>
+<p>当玩家点了赞时，返回的data参数里，有粉丝页的信息，若玩家未点赞，则data参数里，没有数据。</p>
+<p>据此判断即可。</p>
+<p>不过想使用这个API的前提是，应用获得了玩家的user_likes权限。</p>
+<p>为了获得这个权限，我这边的处理方法是，新做一个中间页，页面里使用Facebook的JS SDK重新登录授权一下，登录后跳转到应用地址。</p>
+<pre><code>FB.login(function(response) {
+//跳转到真正的应用地址
+}, {scope: &apos;user_likes&apos;});</code></pre><p>然后在开发者后台Page Tab的设置页面里，把URL改到那个中间页上就行了。</p>
+<p>这样，原本的应用接收到signed_request时，已经取得了user_likes权限，就可以使用那个Graph API了。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://koolob.com/2015/03/30/FACEBOOK%E7%9A%84PAGE-TAB%E5%BA%94%E7%94%A8%E5%88%A4%E6%96%AD%E7%8E%A9%E5%AE%B6%E6%98%AF%E5%90%A6%E5%AF%B9%E7%B2%89%E4%B8%9D%E9%A1%B5%E7%82%B9%E8%B5%9E%E7%9A%84%E6%96%B0%E6%96%B9%E6%B3%95/" data-id="ck8act25j000030f562n7bs6o" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-接入GOOGLEPLAY官方内购的注意事项" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/03/14/%E6%8E%A5%E5%85%A5GOOGLEPLAY%E5%AE%98%E6%96%B9%E5%86%85%E8%B4%AD%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/" class="article-date">
+  <time datetime="2015-03-13T16:00:00.000Z" itemprop="datePublished">2015-03-14</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/03/14/%E6%8E%A5%E5%85%A5GOOGLEPLAY%E5%AE%98%E6%96%B9%E5%86%85%E8%B4%AD%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/">接入GOOGLEPLAY官方内购的注意事项</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>越来越多的国内开发者开始将应用发布到海外去，那么接入应用内购则是很重要的一个环节。</p>
+<p>我从两年前开始做内购SDK，也帮助过一些团队做内购接入，遇到过各种问题，也都一一解决了。如今觉得可以将一些注意事项列出来，供大家参考。</p>
+<ol>
+<li><p>测试设备必须安装了整套的GooglePlay服务框架。</p>
+</li>
+<li><p>设备的Google帐号必须处于登录状态。</p>
+</li>
+<li><p>Play商店的地区不能是中国大陆地区。</p>
+</li>
+<li><p>应用后台创建内购商品需先上传apk。这个apk不用加任何内容，只需要保证包名、签名跟实际要发布的应用一致，并且添加了com.android.vending.BILLING这个权限即可。</p>
+</li>
+<li><p>对于使用V3版API的应用来说，后台创建商品时，不再区分受管理还是不受管理，默认都是按受管理的商品来处理。所以在确认交易完成后，需要将该商品消费掉，否则用户下次再购买这个商品时会提示已拥有此商品。</p>
+</li>
+<li><p>代码接入完成后，要上传新的apk到应用后台，并将应用改成alpha版本状态，然后创建一个Google Plus群组，把设备上登录的Google帐号加入到群租中，将该群组设置为应用的测试群组。</p>
+</li>
+<li><p>一切设置都生效后(可能会等好几个小时)，这个测试帐号应该能在Play商店里看到应用了，下载下来，进行测试即可。</p>
+</li>
+<li><p>测试时需要添加信用卡信息，中国大陆的信用卡好像不行（我之前添加不成功，不知有没有加成功过的）。不过可以绑定Paypal账户(香港地区商店)。</p>
+</li>
+<li><p>在客户端验证交易内容存在风险，可以将Google回调的信息传到自己的服务器上进行验证。</p>
+</li>
+</ol>
+<p>10.发起支付方法里的developerPayload参数可以用来传递开发者自定义的数据。</p>
+<p>目前先总结了这十条，如果以后再想到哪个点比较重要，会在此更新。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://koolob.com/2015/03/14/%E6%8E%A5%E5%85%A5GOOGLEPLAY%E5%AE%98%E6%96%B9%E5%86%85%E8%B4%AD%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/" data-id="ck8act25v000430f56xo51fnc" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/05/12/%E5%9C%A8MAC%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%94%A8DOCKER%E6%90%AD%E5%BB%BASWOOLE%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/">在MAC系统下用DOCKER搭建SWOOLE开发环境</a>
+          </li>
+        
+          <li>
+            <a href="/2016/02/02/%E5%A6%82%E6%9E%9C%E6%88%91%E6%98%AF%E6%94%AF%E4%BB%98%E5%AE%9D%EF%BC%8C%E6%88%91%E4%BC%9A%E5%8F%91%E5%A4%9A%E5%B0%91%E4%B8%AA%E6%95%AC%E4%B8%9A%E7%A6%8F/">如果我是支付宝，我会发多少个敬业福</a>
+          </li>
+        
+          <li>
+            <a href="/2015/12/28/NGINX%E9%85%8D%E7%BD%AEWEBSOCKET%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E7%9A%84%E8%B6%85%E6%97%B6%E9%97%AE%E9%A2%98/">NGINX配置WEBSOCKET反向代理的超时问题</a>
+          </li>
+        
+          <li>
+            <a href="/2015/09/03/%E4%B8%80%E6%AC%A1%E4%B8%8E%E6%88%BF%E5%B1%8B%E4%B8%AD%E4%BB%8B%E7%9A%84%E4%BA%A4%E9%94%8B/">一次与房屋中介的交锋</a>
+          </li>
+        
+          <li>
+            <a href="/2015/04/23/%E7%A8%8B%E5%BA%8F%E5%91%98%E8%A6%81%E6%9C%89%E5%B7%A5%E7%A8%8B%E5%B8%88%E6%80%9D%E7%BB%B4/">程序员要有工程师思维</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 KOOLOB<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6e7d9648a670e018aa99e8bf10ea3c80";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+  </div>
+</body>
+</html>
